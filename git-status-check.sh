@@ -6,6 +6,7 @@ DIRS=(
     "$HOME/work/configurations"
     "$HOME/go/src/neonpulse.io/modbusfirmwaremanager"
     "$HOME/go/src/neonpulse.io/modbustools"
+    "$HOME/go/src/neonpulse.io/modbusappgo"
 )
 
 for dir in "${DIRS[@]}"; do
