@@ -26,6 +26,9 @@ for dir in "${DIRS[@]}"; do
         echo "   → Untracked files vorhanden"
     fi
 
+    # Fetch remote changes (silently)
+    git fetch --quiet 2>/dev/null
+
     # Commits to push (for each branch tracking a remote)
     UNPUSHED=$(git log --branches --not --remotes --oneline 2>/dev/null)
     if [ -n "$UNPUSHED" ]; then
@@ -33,10 +36,18 @@ for dir in "${DIRS[@]}"; do
         echo "$UNPUSHED" | sed 's/^/      /'
     fi
 
+    # Commits to pull (remote ahead of local)
+    UNPULLED=$(git log --oneline HEAD..@{u} 2>/dev/null)
+    if [ -n "$UNPULLED" ]; then
+        echo "   → Commits auf dem Server (zum Pullen):"
+        echo "$UNPULLED" | sed 's/^/      /'
+    fi
+
     # Check if everything is clean
     if git diff --quiet && git diff --cached --quiet \
         && [ -z "$(git ls-files --others --exclude-standard)" ] \
-        && [ -z "$UNPUSHED" ]; then
+        && [ -z "$UNPUSHED" ] \
+        && [ -z "$UNPULLED" ]; then
         echo "   ✓ Alles sauber"
     fi
 
