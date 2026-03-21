@@ -1,10 +1,16 @@
 #!/usr/bin/env bash
 
+DO_PULL=false
+if [[ "$1" == "--pull" ]]; then
+    DO_PULL=true
+fi
+
 DIRS=(
     "$HOME/scripts"
     "$HOME/.claude"
     "$HOME/.scheduled"
     "$HOME/work/configurations"
+    "$HOME/go/src/github.com/rwirdemann/scheduled"
     "$HOME/go/src/neonpulse.io/modbusfirmwaremanager"
     "$HOME/go/src/neonpulse.io/modbustools"
     "$HOME/go/src/neonpulse.io/modbusappgo"
@@ -41,18 +47,40 @@ for dir in "${DIRS[@]}"; do
         echo "$UNPUSHED" | sed 's/^/      /'
     fi
 
-    # Commits to pull (remote ahead of local)
-    UNPULLED=$(git log --oneline HEAD..@{u} 2>/dev/null)
-    if [ -n "$UNPULLED" ]; then
-        echo "   → Commits auf dem Server (zum Pullen):"
-        echo "$UNPULLED" | sed 's/^/      /'
-    fi
+    # Commits to pull (remote ahead of local, per tracking branch)
+    CURRENT_BRANCH=$(git branch --show-current)
+    HAS_UNPULLED=false
+    while read -r local upstream remote; do
+        [ -z "$upstream" ] && continue
+        COMMITS=$(git log "$local..$upstream" --oneline 2>/dev/null)
+        [ -z "$COMMITS" ] && continue
+        HAS_UNPULLED=true
+        if $DO_PULL; then
+            if [ "$local" = "$CURRENT_BRANCH" ]; then
+                OUTPUT=$(git pull 2>&1)
+                EXIT=$?
+            else
+                remote_branch=${upstream#"$remote"/}
+                OUTPUT=$(git fetch "$remote" "$remote_branch:$local" 2>&1)
+                EXIT=$?
+            fi
+            if [ $EXIT -eq 0 ]; then
+                echo "   ✓ Gepullt ($local):"
+            else
+                echo "   ✗ Pull fehlgeschlagen ($local):"
+            fi
+            echo "$OUTPUT" | sed 's/^/      /'
+        else
+            echo "   → Commits zum Pullen ($local):"
+            echo "$COMMITS" | sed 's/^/      /'
+        fi
+    done < <(git branch --format='%(refname:short) %(upstream:short) %(upstream:remotename)')
 
     # Check if everything is clean
     if git diff --quiet && git diff --cached --quiet \
         && [ -z "$(git ls-files --others --exclude-standard)" ] \
         && [ -z "$UNPUSHED" ] \
-        && [ -z "$UNPULLED" ]; then
+        && ! $HAS_UNPULLED; then
         echo "   ✓ Alles sauber"
     fi
 
