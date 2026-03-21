@@ -3,6 +3,7 @@
 DIRS=(
     "$HOME/scripts"
     "$HOME/.claude"
+    "$HOME/.scheduled"
     "$HOME/work/configurations"
     "$HOME/go/src/neonpulse.io/modbusfirmwaremanager"
     "$HOME/go/src/neonpulse.io/modbustools"
