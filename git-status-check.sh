@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 DIRS=(
+    "$HOME/scripts"
     "$HOME/go/src/neonpulse.io/modbusfirmwaremanager"
     "$HOME/go/src/neonpulse.io/modbustools"
 )
