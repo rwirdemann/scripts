@@ -2,6 +2,7 @@
 
 DIRS=(
     "$HOME/scripts"
+    "$HOME/.claude"
     "$HOME/go/src/neonpulse.io/modbusfirmwaremanager"
     "$HOME/go/src/neonpulse.io/modbustools"
 )
