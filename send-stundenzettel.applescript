@@ -3,7 +3,7 @@ set weekNum to do shell script "date +%V"
 
 set theSubject to "Stundenzettel KW " & weekNum
 set theRecipient to "britta.behrmann@codekeepers.de"
-set attachPath to "/Users/ralf/Documents/CodeKeepers/Stundenzettel/2026-Stundenzettel_Ralf-Wirdemann.xlsx"
+set attachPath to "/Users/ralfwirdemann/Documents/CodeKeepers/Stundenzettel/2026-Stundenzettel_Ralf-Wirdemann.xlsx"
 
 -- Datei prüfen und als Alias auflösen (schlägt mit Fehler fehl wenn nicht vorhanden)
 set theAlias to (POSIX file attachPath) as alias

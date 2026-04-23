@@ -12,7 +12,7 @@ DIRS=(
     "$HOME/work/configurations"
     "$HOME/work/ralfwirdemann-hugo"
     "$HOME/go/src/github.com/rwirdemann/scheduled"
-    "$HOME/go/src/neonpulse.io/modbusfirmwaremanager"
+    "$HOME/go/src/neonpulse.io/firmwaremanager"
     "$HOME/go/src/neonpulse.io/modbustools"
     "$HOME/go/src/neonpulse.io/modbusappgo"
 )
