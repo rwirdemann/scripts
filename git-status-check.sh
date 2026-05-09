@@ -7,7 +7,6 @@ fi
 
 DIRS=(
     "$HOME/scripts"
-    "$HOME/.claude"
     "$HOME/.scheduled"
     "$HOME/work/configurations"
     "$HOME/work/ralfwirdemann-hugo"

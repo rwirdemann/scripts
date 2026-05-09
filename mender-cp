@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+# Device name → Mender device ID mapping
+declare -A DEVICE_IDS=(
+    ["boston"]="bab83b30-44d3-4e0d-9076-4efe3d0660e6"
+    # ["berlin"]="..."
+    # ["tokyo"]="..."
+)
+
+TOKEN_FILE="/Users/ralf/work/mender-cli-utils/token.txt"
+
+usage() {
+    echo "Usage: $(basename "$0") <device-name> <file>"
+    echo ""
+    echo "Known devices:"
+    for name in "${!DEVICE_IDS[@]}"; do
+        echo "  $name  →  ${DEVICE_IDS[$name]}"
+    done
+    exit 1
+}
+
+# Argument check
+if [[ $# -ne 2 ]]; then
+    usage
+fi
+
+DEVICE_NAME="$1"
+FILE="$2"
+
+# Lookup device ID
+DEVICE_ID="${DEVICE_IDS[$DEVICE_NAME]}"
+
+if [[ -z "$DEVICE_ID" ]]; then
+    echo "Error: Unknown device '$DEVICE_NAME'" >&2
+    echo ""
+    usage
+fi
+
+# Run original command
+mender-cp.sh --token "$TOKEN_FILE" --id "$DEVICE_ID" "$FILE"
